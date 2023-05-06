@@ -2,16 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChangePlayer : MonoBehaviour
+public class FPSChangePlayer : MonoBehaviour
 {
-    Camera cam;
-    public float HitObjectX;
-    public float HitObjectZ;
-    public float HitObjectY;
+    [SerializeField] Camera cam;
+    [SerializeField] public float HitObjectX;
+    [SerializeField] public float HitObjectZ;
+    [SerializeField] public float HitObjectY;
     public float distance;
     public bool Cooldown = false;
     public CooldownC cooldownC;
 
+    // Start is called before the first frame update
     private IEnumerator CD()
     {
         cooldownC.CDc();
@@ -22,27 +23,28 @@ public class ChangePlayer : MonoBehaviour
 
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        Ray raycastt = Camera.main.ScreenPointToRay(Input.mousePosition);
-                Debug.DrawRay(raycastt.origin, raycastt.direction * 100, Color.green);
+        Vector3 mousePos = Input.mousePosition;
+        mousePos.z = 10f;
+        mousePos = cam.ScreenToWorldPoint(mousePos);
+        Debug.DrawRay(transform.position, mousePos - transform.position, Color.green);
         if (Input.GetMouseButtonDown(0))
         {
-            if (Cooldown == false)
+            if (Cooldown == false) 
             {
                 Debug.Log("Raycast casted");
-                Vector3 raycastDirection = Camera.main.transform.forward;
+                Vector3 raycastDirection = cam.transform.forward;
                 Ray ray = new Ray(transform.position, raycastDirection);
 
                 RaycastHit hit;
-                Debug.DrawRay(ray.origin, ray.direction * 100, Color.green);
+                Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
 
-
-                if (Physics.Raycast(ray, out hit)) 
+                                if (Physics.Raycast(ray, out hit)) 
                 {
                     if (hit.collider.gameObject.CompareTag("Teammate"))
                     {
@@ -59,7 +61,7 @@ public class ChangePlayer : MonoBehaviour
                             GameObject Player = GameObject.FindWithTag("player");
                             GameObject Cam = GameObject.FindWithTag("MainCamera");
                             hit.collider.gameObject.tag = "player";
-                            PlayerMovement AddPlayerMovement = hit.collider.gameObject.GetComponent<PlayerMovement>();
+                            FPSmovement AddPlayerMovement = hit.collider.gameObject.GetComponent<FPSmovement>();
                             if (AddPlayerMovement != null) 
                             {
                                 AddPlayerMovement.enabled = true;
@@ -68,19 +70,22 @@ public class ChangePlayer : MonoBehaviour
 
                             if(Player != null) 
                             {
-                                PlayerMovement playerMovement = Player.GetComponent<PlayerMovement>();
-                                CamScript camScript = Cam.GetComponent<CamScript>();
+                                Debug.Log("player not null (check 1)");
+                                FPSmovement fPSmovement = Player.GetComponent<FPSmovement>();
+                                //CamScript camScript = Cam.GetComponent<CamScript>();
 
-                                if(playerMovement != null) 
+                                if(fPSmovement != null) 
                                 {
-                                    playerMovement.DisableMovement();
-                                    camScript.ChangeTag();
+                                    Debug.Log("fps not null (check 2)");
+                                    fPSmovement.DisableMovement();
+                                    //camScript.ChangeTag();
 
                                     GameObject Camera = GameObject.FindWithTag("MainCamera");
                                     CameraScript cameraScript = Camera.GetComponent<CameraScript>();
 
                                     if(cameraScript != null)
                                     {
+                                        Debug.Log("camera not null (check 3)");
                                         cameraScript.ChangeCamera();
                                     }
                                 }
