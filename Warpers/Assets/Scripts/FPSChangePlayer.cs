@@ -78,6 +78,10 @@ public class FPSChangePlayer : MonoBehaviour
                                 {
                                     Debug.Log("fps not null (check 2)");
                                     fPSmovement.DisableMovement();
+                                    
+                                    //transform.SetParent(Player.transform);
+                                    //transform.SetParent(Player.transform);
+                                    //transform.position = Player.transform.position;
                                     //camScript.ChangeTag();
 
                                     GameObject Camera = GameObject.FindWithTag("MainCamera");
